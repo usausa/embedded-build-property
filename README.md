@@ -41,3 +41,4 @@ Console.WriteLine($"Key: {Secrets.Key()}");       // 12345678
 ## TODO
 
 * Extend supported types
+* Secret file support?
