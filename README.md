@@ -17,27 +17,26 @@ using EmbeddedBuildProperty;
 
 internal static partial class Secrets
 {
-    [BuildProperty("SecretKey1")]
-    public static partial string Key();
-
     [BuildProperty]
-    public static partial string SecretKey2();
+    public static partial string Flavor();
+
+    [BuildProperty("SecretKey")]
+    public static partial string Key();
 }
 ```
 
 ### Build
 
 ```
-dotnet build EmbeddedBuildProperty.Example.csproj /p:EmbeddedBuildProperty=\"SecretKey1=12345678,SecretKey2=00000000\"
+dotnet build Example.csproj /p:EmbeddedBuildProperty=\"Flavor=Free,SecretKey=12345678\"
 ```
 
 ### Result
 
 ```cs
-Console.WriteLine($"Key1: {Secrets.Key()}");          // 12345678
-Console.WriteLine($"Key2: {Secrets.SecretKey2()}");   // 00000000
+Console.WriteLine($"Flavor: {Secrets.Flavor()}"); // Free
+Console.WriteLine($"Key: {Secrets.Key()}");       // 12345678
 ```
-
 
 ## TODO
 
