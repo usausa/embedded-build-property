@@ -1,6 +1,6 @@
 # EmbeddedBuildProperty
 
-[![NuGet Badge](https://buildstats.info/nuget/AmazonLambdaExtension)](https://www.nuget.org/packages/EmbeddedBuildProperty/)
+[![NuGet Badge](https://buildstats.info/nuget/EmbeddedBuildProperty)](https://www.nuget.org/packages/EmbeddedBuildProperty/)
 
 ## What is this?
 
