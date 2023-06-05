@@ -5,4 +5,33 @@
     <CodeAnalysisRuleSet>..\Analyzers.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <IsRoslynComponent>true</IsRoslynComponent>
+    <IncludeSymbols>false</IncludeSymbols>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);SourceGeneratorOutput</TargetsForTfmSpecificContentInPackage>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>EmbeddedBuildProperty</PackageId>
+    <Title>EmbeddedBuildProperty</Title>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/usausa/embedded-build-property.git</RepositoryUrl>
+    <Description>Embedded build property source generator.</Description>
+    <Summary>Embedded build property source generator.</Summary>
+    <PackageTags>generator</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.6.0" PrivateAssets="all" />
+  </ItemGroup>
+
+  <Target Name="SourceGeneratorOutput">
+    <ItemGroup>
+      <TfmSpecificPackageFile Include="$(OutputPath)\EmbeddedBuildProperty.SourceGenerator.dll" PackagePath="analyzers\dotnet\cs" />
+    </ItemGroup>
+  </Target>
+
 </Project>

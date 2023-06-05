@@ -8,4 +8,17 @@
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <!-- for debug -->
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <EmbeddedBuildProperty>SecretKey=12345678</EmbeddedBuildProperty>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EmbeddedBuildProperty.SourceGenerator\EmbeddedBuildProperty.SourceGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
 </Project>
