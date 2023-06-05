@@ -4,9 +4,9 @@ using EmbeddedBuildProperty;
 
 internal static partial class Secrets
 {
-    [BuildProperty("SecretKey")]
+    [BuildProperty("SecretKey1")]
     public static partial string Key();
 
     [BuildProperty]
-    public static partial string Vector();
+    public static partial string SecretKey2();
 }

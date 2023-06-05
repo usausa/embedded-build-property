@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmbeddedBuildProperty.SourceGenerator", "EmbeddedBuildProperty.SourceGenerator\EmbeddedBuildProperty.SourceGenerator.csproj", "{84191C4A-1C42-4000-A9A6-7B0F069B9C77}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmbeddedBuildProperty", "EmbeddedBuildProperty\EmbeddedBuildProperty.csproj", "{84191C4A-1C42-4000-A9A6-7B0F069B9C77}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmbeddedBuildProperty.Example", "EmbeddedBuildProperty.Example\EmbeddedBuildProperty.Example.csproj", "{A1CC4767-2DF5-45B5-8A05-19C91C0DA1A9}"
 EndProject

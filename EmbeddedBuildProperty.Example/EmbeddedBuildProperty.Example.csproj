@@ -13,12 +13,16 @@
     <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
   </PropertyGroup>
 
+  <!--
   <PropertyGroup>
-    <EmbeddedBuildProperty>SecretKey=12345678</EmbeddedBuildProperty>
+    <EmbeddedBuildProperty>SecretKey1=12345678,SecretKey2=00000000</EmbeddedBuildProperty>
   </PropertyGroup>
+  -->
+
+  <Import Project="..\EmbeddedBuildProperty\build\EmbeddedBuildProperty.props" />
 
   <ItemGroup>
-    <ProjectReference Include="..\EmbeddedBuildProperty.SourceGenerator\EmbeddedBuildProperty.SourceGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\EmbeddedBuildProperty\EmbeddedBuildProperty.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
 </Project>
