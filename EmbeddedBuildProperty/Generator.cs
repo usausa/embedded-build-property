@@ -89,7 +89,7 @@ public sealed class Generator : IIncrementalGenerator
             return null;
         }
 
-        // TODO Extend
+        // TODO Extend supported types
         var returnType = returnTypeSymbol.ToDisplayString();
         if (returnType != "string")
         {
@@ -183,7 +183,7 @@ public sealed class Generator : IIncrementalGenerator
             buffer.Append("() => ");
             if (values.TryGetValue(method.PropertyName, out var value))
             {
-                // TODO Extend converter
+                // TODO Extend supported types
                 buffer.Append('"').Append(value).Append('"').Append(';');
             }
             else
