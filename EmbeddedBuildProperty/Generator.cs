@@ -85,7 +85,9 @@ public sealed partial class Generator : IIncrementalGenerator
         }
 
         var returnType = returnTypeSymbol.ToDisplayString();
-        if (!Formatters.ContainsKey(returnType) && returnType.EndsWith("?") && !Formatters.ContainsKey(returnType.Substring(0, returnType.Length - 1)))
+        if (!Formatters.ContainsKey(returnType) &&
+            returnType.EndsWith("?", StringComparison.InvariantCulture) &&
+            !Formatters.ContainsKey(returnType.Substring(0, returnType.Length - 1)))
         {
             return null;
         }

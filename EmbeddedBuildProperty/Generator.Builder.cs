@@ -41,7 +41,7 @@ public sealed partial class Generator
             buffer.Append("() => ");
             if (values.TryGetValue(method.PropertyName, out var value))
             {
-                var formatter = method.ReturnType.EndsWith("?")
+                var formatter = method.ReturnType.EndsWith("?", StringComparison.InvariantCulture)
                     ? Formatters[method.ReturnType.Substring(0, method.ReturnType.Length - 1)]
                     : Formatters[method.ReturnType];
                 buffer.Append(formatter(value)).Append(';');
