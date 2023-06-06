@@ -15,7 +15,7 @@ namespace Example;
 
 using EmbeddedBuildProperty;
 
-internal static partial class Secrets
+internal static partial class Variants
 {
     [BuildProperty]
     public static partial string Flavor();
@@ -34,8 +34,8 @@ dotnet build Example.csproj /p:EmbeddedBuildProperty=\"Flavor=Free,SecretKey=123
 ### Result
 
 ```cs
-Console.WriteLine($"Flavor: {Secrets.Flavor()}"); // Free
-Console.WriteLine($"Key: {Secrets.Key()}");       // 12345678
+Console.WriteLine($"Flavor: {Variants.Flavor()}"); // Free
+Console.WriteLine($"Key: {Variants.Key()}");       // 12345678
 ```
 
 ## TODO

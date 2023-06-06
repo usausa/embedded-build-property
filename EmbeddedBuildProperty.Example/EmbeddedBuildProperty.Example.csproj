@@ -13,9 +13,11 @@
     <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
   </PropertyGroup>
 
+  <!--
   <PropertyGroup>
-    <EmbeddedBuildProperty>Flavor=Free,SecretKey=12345678</EmbeddedBuildProperty>
+    <EmbeddedBuildProperty>Flavor=Free,SecretKey=12345678,Code=123,Flag=true</EmbeddedBuildProperty>
   </PropertyGroup>
+  -->
 
   <Import Project="..\EmbeddedBuildProperty\build\EmbeddedBuildProperty.props" />
 
