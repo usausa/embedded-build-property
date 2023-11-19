@@ -19,7 +19,7 @@ public sealed partial class Generator : IIncrementalGenerator
             .CreateSyntaxProvider(
                 static (node, _) => IsTargetSyntax(node),
                 static (context, _) => GetMethodModel(context))
-            .Where(x => x is not null)
+            .Where(static x => x is not null)
             .Collect();
 
         var valueProvider = context.AnalyzerConfigOptionsProvider
@@ -36,7 +36,7 @@ public sealed partial class Generator : IIncrementalGenerator
         {
             return values
                 .Split(',')
-                .Select(x =>
+                .Select(static x =>
                 {
                     var index = x.IndexOf('=');
                     if (index > 0)
@@ -50,8 +50,8 @@ public sealed partial class Generator : IIncrementalGenerator
 
                     return new { Key = string.Empty, Value = string.Empty };
                 })
-                .Where(x => !String.IsNullOrEmpty(x.Key))
-                .ToDictionary(x => x.Key, x => x.Value);
+                .Where(static x => !String.IsNullOrEmpty(x.Key))
+                .ToDictionary(static x => x.Key, static x => x.Value);
         }
 
         return new Dictionary<string, string>();
@@ -93,7 +93,7 @@ public sealed partial class Generator : IIncrementalGenerator
         }
 
         var attribute = methodSymbol.GetAttributes()
-            .FirstOrDefault(x => x.AttributeClass!.ToDisplayString() == "EmbeddedBuildProperty.BuildProperty");
+            .FirstOrDefault(static x => x.AttributeClass!.ToDisplayString() == "EmbeddedBuildProperty.BuildProperty");
         if (attribute is null)
         {
             return null;
@@ -120,7 +120,7 @@ public sealed partial class Generator : IIncrementalGenerator
     private static void Execute(SourceProductionContext context, ImmutableArray<MethodModel> methods, Dictionary<string, string> values)
     {
         var buffer = new StringBuilder();
-        foreach (var group in methods.GroupBy(x => new { x.Namespace, x.ClassName }))
+        foreach (var group in methods.GroupBy(static x => new { x.Namespace, x.ClassName }))
         {
             context.CancellationToken.ThrowIfCancellationRequested();
 
