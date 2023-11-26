@@ -54,7 +54,7 @@ public sealed partial class Generator : IIncrementalGenerator
                 .ToDictionary(static x => x.Key, static x => x.Value);
         }
 
-        return new Dictionary<string, string>();
+        return [];
     }
 
     private static bool IsTargetSyntax(SyntaxNode node) =>
