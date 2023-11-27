@@ -1,9 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <CodeAnalysisRuleSet>..\Analyzers.ruleset</CodeAnalysisRuleSet>
-    <NoWarn>$(NoWarn);NU5128</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -18,10 +17,7 @@
   <PropertyGroup>
     <PackageId>EmbeddedBuildProperty</PackageId>
     <Title>EmbeddedBuildProperty</Title>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <RepositoryUrl>https://github.com/usausa/embedded-build-property.git</RepositoryUrl>
     <Description>Embedded build property source generator.</Description>
-    <Summary>Embedded build property source generator.</Summary>
     <PackageTags>generator</PackageTags>
   </PropertyGroup>
 
