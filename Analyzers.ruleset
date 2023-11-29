@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="Analyzers Rules" Description="Analyzers Rules" ToolsVersion="16.0">
+<RuleSet Name="Analyzers Rules" Description="Analyzers Rules" ToolsVersion="17.0">
   <IncludeAll Action="Warning" />
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
     <Rule Id="SA1005" Action="Hidden" />
