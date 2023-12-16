@@ -23,7 +23,7 @@
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+  <PropertyGroup>
     <AnalysisMode>All</AnalysisMode>
     <AnalysisLevel>preview</AnalysisLevel>
   </PropertyGroup>
