@@ -1,6 +1,6 @@
 # EmbeddedBuildProperty
 
-[![NuGet Badge](https://buildstats.info/nuget/EmbeddedBuildProperty)](https://www.nuget.org/packages/EmbeddedBuildProperty/)
+[![NuGet](https://img.shields.io/nuget/v/EmbeddedBuildProperty.svg)](https://www.nuget.org/packages/EmbeddedBuildProperty)
 
 ## What is this?
 
