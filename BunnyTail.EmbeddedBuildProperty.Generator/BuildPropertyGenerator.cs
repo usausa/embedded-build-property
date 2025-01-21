@@ -112,7 +112,7 @@ public sealed class BuildPropertyGenerator : IIncrementalGenerator
 
     private static void Execute(SourceProductionContext context, EquatableArray<BuildProperty> values, ImmutableArray<Result<PropertyModel>> properties)
     {
-        foreach (var info in properties.Select(static x => x.Error).OfType<DiagnosticInfo>())
+        foreach (var info in properties.SelectPart(static x => x.Error))
         {
             context.ReportDiagnostic(info);
         }
@@ -120,12 +120,12 @@ public sealed class BuildPropertyGenerator : IIncrementalGenerator
         var valueMap = values.ToArray().ToDictionary(static x => x.Key, static x => x.Value);
 
         var builder = new SourceBuilder();
-        foreach (var group in properties.Where(static x => x.Error is null).GroupBy(static x => new { x.Value.Namespace, x.Value.ClassName }))
+        foreach (var group in properties.SelectPart(static x => x.Value).GroupBy(static x => new { x.Namespace, x.ClassName }))
         {
             context.CancellationToken.ThrowIfCancellationRequested();
 
             builder.Clear();
-            BuildSource(builder, valueMap, group.Select(static x => x.Value).ToList());
+            BuildSource(builder, valueMap, group.ToList());
 
             var filename = MakeFilename(group.Key.Namespace, group.Key.ClassName);
             var source = builder.ToString();
