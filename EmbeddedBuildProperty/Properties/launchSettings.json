@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "EmbeddedBuildProperty": {
-      "commandName": "DebugRoslynComponent",
-      "targetProject": "..\\EmbeddedBuildProperty.Example\\EmbeddedBuildProperty.Example.csproj"
-    }
-  }
-}

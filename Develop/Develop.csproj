@@ -9,20 +9,17 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <!-- for debug -->
     <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
   </PropertyGroup>
 
-  <!--
   <PropertyGroup>
     <EmbeddedBuildProperty>Flavor=Free,SecretKey=12345678,Code=123,Flag=true</EmbeddedBuildProperty>
   </PropertyGroup>
-  -->
 
-  <Import Project="..\EmbeddedBuildProperty\build\EmbeddedBuildProperty.props" />
-
+  <Import Project="..\EmbeddedBuildProperty.Generator\build\EmbeddedBuildProperty.Generator.props" />
   <ItemGroup>
-    <ProjectReference Include="..\EmbeddedBuildProperty\EmbeddedBuildProperty.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\EmbeddedBuildProperty.Generator\EmbeddedBuildProperty.Generator.csproj" OutputItemType="analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\EmbeddedBuildProperty\EmbeddedBuildProperty.csproj" />
   </ItemGroup>
 
 </Project>
