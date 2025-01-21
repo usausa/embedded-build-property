@@ -17,10 +17,11 @@
     <EmbeddedBuildProperty>Flavor=Free,SecretKey=12345678,Code=123,Flag=true</EmbeddedBuildProperty>
   </PropertyGroup>
 
-  <Import Project="..\EmbeddedBuildProperty.Generator\build\EmbeddedBuildProperty.Generator.props" />
+  <Import Project="..\BunnyTail.EmbeddedBuildProperty.Generator\build\BunnyTail.EmbeddedBuildProperty.Generator.props" />
+
   <ItemGroup>
-    <ProjectReference Include="..\EmbeddedBuildProperty.Generator\EmbeddedBuildProperty.Generator.csproj" OutputItemType="analyzer" ReferenceOutputAssembly="false" />
-    <ProjectReference Include="..\EmbeddedBuildProperty\EmbeddedBuildProperty.csproj" />
+    <ProjectReference Include="..\BunnyTail.EmbeddedBuildProperty.Generator\BunnyTail.EmbeddedBuildProperty.Generator.csproj" OutputItemType="analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\BunnyTail.EmbeddedBuildProperty\BunnyTail.EmbeddedBuildProperty.csproj" />
   </ItemGroup>
 
 </Project>

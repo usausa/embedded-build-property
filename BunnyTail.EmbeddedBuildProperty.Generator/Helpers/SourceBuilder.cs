@@ -1,4 +1,4 @@
-namespace EmbeddedBuildProperty.Generator.Helpers;
+namespace BunnyTail.EmbeddedBuildProperty.Generator.Helpers;
 
 using System.Diagnostics;
 using System.Globalization;

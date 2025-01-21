@@ -1,11 +1,11 @@
-namespace EmbeddedBuildProperty.Generator;
+namespace BunnyTail.EmbeddedBuildProperty.Generator;
 
 using System;
 using System.Collections.Immutable;
 using System.Text;
 
-using EmbeddedBuildProperty.Generator.Helpers;
-using EmbeddedBuildProperty.Generator.Models;
+using BunnyTail.EmbeddedBuildProperty.Generator.Helpers;
+using BunnyTail.EmbeddedBuildProperty.Generator.Models;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -15,6 +15,12 @@ using Microsoft.CodeAnalysis.Text;
 [Generator]
 public sealed class BuildPropertyGenerator : IIncrementalGenerator
 {
+    private const string AttributeName = "BunnyTail.EmbeddedBuildProperty.BuildPropertyAttribute";
+
+    // ------------------------------------------------------------
+    // Initialize
+    // ------------------------------------------------------------
+
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         var valueProvider = context.AnalyzerConfigOptionsProvider
@@ -22,7 +28,7 @@ public sealed class BuildPropertyGenerator : IIncrementalGenerator
 
         var propertyProvider = context.SyntaxProvider
             .ForAttributeWithMetadataName(
-                "EmbeddedBuildProperty.BuildPropertyAttribute",
+                AttributeName,
                 static (syntax, _) => IsTargetSyntax(syntax),
                 static (context, _) => GetPropertyModel(context))
             .Collect();
@@ -31,6 +37,10 @@ public sealed class BuildPropertyGenerator : IIncrementalGenerator
             valueProvider.Combine(propertyProvider),
             static (context, provider) => Execute(context, provider.Left, provider.Right));
     }
+
+    // ------------------------------------------------------------
+    // Parser
+    // ------------------------------------------------------------
 
     private static EquatableArray<BuildProperty> SelectBuildProperty(AnalyzerConfigOptionsProvider provider, CancellationToken token)
     {
@@ -81,7 +91,7 @@ public sealed class BuildPropertyGenerator : IIncrementalGenerator
         var ns = String.IsNullOrEmpty(containingType.ContainingNamespace.Name)
             ? string.Empty
             : containingType.ContainingNamespace.ToDisplayString();
-        var attribute = symbol.GetAttributes().First(static x => x.AttributeClass!.ToDisplayString() == "EmbeddedBuildProperty.BuildPropertyAttribute");
+        var attribute = symbol.GetAttributes().First(static x => x.AttributeClass!.ToDisplayString() == AttributeName);
         var propertyName = (attribute.ConstructorArguments.Length > 0) && (attribute.ConstructorArguments[0].Value is string value)
             ? value
             : symbol.Name;
@@ -95,6 +105,10 @@ public sealed class BuildPropertyGenerator : IIncrementalGenerator
             symbol.Name,
             propertyName));
     }
+
+    // ------------------------------------------------------------
+    // Generator
+    // ------------------------------------------------------------
 
     private static void Execute(SourceProductionContext context, EquatableArray<BuildProperty> values, ImmutableArray<Result<PropertyModel>> properties)
     {

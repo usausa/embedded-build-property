@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.12.35707.178
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmbeddedBuildProperty", "EmbeddedBuildProperty\EmbeddedBuildProperty.csproj", "{73BA5592-6857-4994-BD27-E7E415EBC5FE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BunnyTail.EmbeddedBuildProperty", "BunnyTail.EmbeddedBuildProperty\BunnyTail.EmbeddedBuildProperty.csproj", "{73BA5592-6857-4994-BD27-E7E415EBC5FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmbeddedBuildProperty.Generator", "EmbeddedBuildProperty.Generator\EmbeddedBuildProperty.Generator.csproj", "{2921C67D-EFFB-42DF-901F-9767C37FE833}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BunnyTail.EmbeddedBuildProperty.Generator", "BunnyTail.EmbeddedBuildProperty.Generator\BunnyTail.EmbeddedBuildProperty.Generator.csproj", "{2921C67D-EFFB-42DF-901F-9767C37FE833}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Develop", "Develop\Develop.csproj", "{94781148-B8E1-48D3-A298-9472993FAEE6}"
 EndProject
@@ -15,9 +15,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
 		Analyzers.ruleset = Analyzers.ruleset
+		BunnyTail.EmbeddedBuildProperty.sln.DotSettings = BunnyTail.EmbeddedBuildProperty.sln.DotSettings
 		Directory.Build.props = Directory.Build.props
 		Directory.Build.targets = Directory.Build.targets
-		EmbeddedBuildProperty.sln.DotSettings = EmbeddedBuildProperty.sln.DotSettings
 		LICENSE = LICENSE
 		README.md = README.md
 		test.runsettings = test.runsettings

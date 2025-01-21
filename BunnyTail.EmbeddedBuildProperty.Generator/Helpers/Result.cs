@@ -1,4 +1,4 @@
-namespace EmbeddedBuildProperty.Generator.Helpers;
+namespace BunnyTail.EmbeddedBuildProperty.Generator.Helpers;
 
 public sealed record Result<TValue>(TValue Value, DiagnosticInfo? Error)
     where TValue : IEquatable<TValue>;

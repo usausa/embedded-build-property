@@ -1,4 +1,4 @@
-namespace EmbeddedBuildProperty.Generator.Helpers;
+namespace BunnyTail.EmbeddedBuildProperty.Generator.Helpers;
 
 internal static class SourceBuilderExtensions
 {

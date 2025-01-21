@@ -13,20 +13,20 @@
 
   <Target Name="PackBuildOutputs" DependsOnTargets="SatelliteDllsProjectOutputGroup;DebugSymbolsProjectOutputGroup">
     <ItemGroup>
-      <TfmSpecificPackageFile Include="..\EmbeddedBuildProperty.Generator\build\**" PackagePath="build" />
-      <TfmSpecificPackageFile Include="$(OutputPath)\EmbeddedBuildProperty.Generator.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+      <TfmSpecificPackageFile Include="..\BunnyTail.EmbeddedBuildProperty.Generator\build\**" PackagePath="build" />
+      <TfmSpecificPackageFile Include="$(OutputPath)\BunnyTail.EmbeddedBuildProperty.Generator.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
     </ItemGroup>
   </Target>
 
   <PropertyGroup>
     <PackageId>BunnyTail.EmbeddedBuildProperty</PackageId>
-    <Title>EmbeddedBuildProperty</Title>
+    <Title>BunnyTail.EmbeddedBuildProperty</Title>
     <Description>Embedded build property source generator.</Description>
     <PackageTags>generator</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EmbeddedBuildProperty.Generator\EmbeddedBuildProperty.Generator.csproj" PrivateAssets="all" />
+    <ProjectReference Include="..\BunnyTail.EmbeddedBuildProperty.Generator\BunnyTail.EmbeddedBuildProperty.Generator.csproj" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>

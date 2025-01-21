@@ -1,4 +1,4 @@
-namespace EmbeddedBuildProperty.Generator.Models;
+namespace BunnyTail.EmbeddedBuildProperty.Generator.Models;
 
 internal sealed record BuildProperty(
     string Key,

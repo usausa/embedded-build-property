@@ -1,6 +1,6 @@
 namespace Develop;
 
-using EmbeddedBuildProperty;
+using BunnyTail.EmbeddedBuildProperty;
 
 internal static partial class Variants
 {

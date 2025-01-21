@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "EmbeddedBuildProperty.Generator": {
+    "BunnyTail.EmbeddedBuildProperty.Generator": {
       "commandName": "DebugRoslynComponent",
       "targetProject": "..\\Develop\\Develop.csproj"
     }

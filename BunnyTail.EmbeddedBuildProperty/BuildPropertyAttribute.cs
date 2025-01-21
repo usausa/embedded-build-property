@@ -1,4 +1,4 @@
-namespace EmbeddedBuildProperty;
+namespace BunnyTail.EmbeddedBuildProperty;
 
 using System;
 

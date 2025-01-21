@@ -1,4 +1,4 @@
-namespace EmbeddedBuildProperty.Generator;
+namespace BunnyTail.EmbeddedBuildProperty.Generator;
 
 using Microsoft.CodeAnalysis;
 
