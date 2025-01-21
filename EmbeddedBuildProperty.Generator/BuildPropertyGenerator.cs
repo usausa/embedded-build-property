@@ -25,11 +25,7 @@ public sealed class BuildPropertyGenerator : IIncrementalGenerator
                 "EmbeddedBuildProperty.BuildPropertyAttribute",
                 static (syntax, _) => IsTargetSyntax(syntax),
                 static (context, _) => GetPropertyModel(context))
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-            .Where(static x => x.Value is not null) // TODO delete
             .Collect();
-
-        // TODO Diagnostics? Errorsだけ分離する？ とりあえず定数定義にして、Modelもそうして、まとめて報告するか
 
         context.RegisterImplementationSourceOutput(
             valueProvider.Combine(propertyProvider),
@@ -67,20 +63,12 @@ public sealed class BuildPropertyGenerator : IIncrementalGenerator
 
         if (context.SemanticModel.GetDeclaredSymbol(syntax) is not IPropertySymbol symbol)
         {
-            // TODO シンボル取得失敗
-            return null!;
+            return Results.Error<PropertyModel>(null);
         }
 
-        if (!symbol.IsPartialDefinition || !symbol.IsStatic)
+        if (!symbol.IsPartialDefinition || !symbol.IsStatic || (symbol.GetMethod is null))
         {
-            // TODO partial, staticチェック
-            return null!;
-        }
-
-        if (symbol.GetMethod is null)
-        {
-            // TODO getterがない
-            return null!;
+            return Results.Error<PropertyModel>(new DiagnosticInfo(Diagnostics.InvalidPropertyDefinition, syntax.GetLocation()));
         }
 
         var returnType = symbol.GetMethod.ReturnType.ToDisplayString();
@@ -88,8 +76,7 @@ public sealed class BuildPropertyGenerator : IIncrementalGenerator
             returnType.EndsWith("?", StringComparison.InvariantCulture) &&
             !Formatters.ContainsKey(returnType.Substring(0, returnType.Length - 1)))
         {
-            // TODO 未対応型
-            return null!;
+            return Results.Error<PropertyModel>(new DiagnosticInfo(Diagnostics.UnsupportedPropertyType, syntax.GetLocation(), returnType));
         }
 
         var containingType = symbol.ContainingType;
@@ -101,20 +88,22 @@ public sealed class BuildPropertyGenerator : IIncrementalGenerator
             ? value
             : symbol.Name;
 
-        var model = new PropertyModel(
+        return Results.Success(new PropertyModel(
             ns,
             containingType.Name,
             containingType.IsValueType,
             symbol.DeclaredAccessibility,
             returnType,
             symbol.Name,
-            propertyName);
-        return new(model, new([]));
+            propertyName));
     }
 
     private static void Execute(SourceProductionContext context, EquatableArray<BuildProperty> values, ImmutableArray<Result<PropertyModel>> properties)
     {
-        // TODO Diagnostic
+        foreach (var info in properties.Select(static x => x.Error).OfType<DiagnosticInfo>())
+        {
+            context.ReportDiagnostic(info);
+        }
 
         var valueMap = values.ToArray().ToDictionary(static x => x.Key, static x => x.Value);
 
