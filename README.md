@@ -1,17 +1,17 @@
-# EmbeddedBuildProperty
+# BunnyTail.EmbeddedBuildProperty
 
 [![NuGet](https://img.shields.io/nuget/v/BunnyTail.EmbeddedBuildProperty.svg)](https://www.nuget.org/packages/BunnyTail.EmbeddedBuildProperty)
 
 ## What is this?
 
-Generate a method to get the properties specified in the build options.
+Generate property to get build options.
 
 ## Usage
 
 ### Source
 
 ```cs
-using EmbeddedBuildProperty;
+using BunnyTail.EmbeddedBuildProperty;
 
 internal static partial class Variants
 {
