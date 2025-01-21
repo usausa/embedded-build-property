@@ -14,7 +14,7 @@ public sealed record DiagnosticInfo
 
     public ImmutableDictionary<string, string?>? Properties { get; }
 
-    public object?[]? MessageArgs { get; }
+    public string? MessageArg { get; }
 
     public DiagnosticInfo(
         DiagnosticDescriptor descriptor,
@@ -34,8 +34,8 @@ public sealed record DiagnosticInfo
     public DiagnosticInfo(
         DiagnosticDescriptor descriptor,
         Location? location,
-        params object?[]? messageArgs)
-        : this(descriptor, location, null, messageArgs)
+        string? messageArg)
+        : this(descriptor, location, null, messageArg)
     {
     }
 
@@ -43,12 +43,12 @@ public sealed record DiagnosticInfo
         DiagnosticDescriptor descriptor,
         Location? location,
         ImmutableDictionary<string, string?>? properties,
-        params object?[]? messageArgs)
+        string? messageArg)
     {
         Descriptor = descriptor;
         Location = location is not null ? LocationInfo.CreateFrom(location) : null;
         Properties = properties;
-        MessageArgs = messageArgs;
+        MessageArg = messageArg;
     }
 }
 #pragma warning restore CA1819

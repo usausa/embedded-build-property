@@ -72,9 +72,7 @@ public sealed class BuildPropertyGenerator : IIncrementalGenerator
         }
 
         var returnType = symbol.GetMethod.ReturnType.ToDisplayString();
-        if (!Formatters.ContainsKey(returnType) &&
-            returnType.EndsWith("?", StringComparison.InvariantCulture) &&
-            !Formatters.ContainsKey(returnType.Substring(0, returnType.Length - 1)))
+        if (!IsFormatSupported(returnType))
         {
             return Results.Error<PropertyModel>(new DiagnosticInfo(Diagnostics.UnsupportedPropertyType, syntax.GetLocation(), returnType));
         }
@@ -108,7 +106,7 @@ public sealed class BuildPropertyGenerator : IIncrementalGenerator
         var valueMap = values.ToArray().ToDictionary(static x => x.Key, static x => x.Value);
 
         var builder = new SourceBuilder();
-        foreach (var group in properties.GroupBy(static x => new { x.Value.Namespace, x.Value.ClassName }))
+        foreach (var group in properties.Where(static x => x.Error is null).GroupBy(static x => new { x.Value.Namespace, x.Value.ClassName }))
         {
             context.CancellationToken.ThrowIfCancellationRequested();
 
@@ -142,8 +140,18 @@ public sealed class BuildPropertyGenerator : IIncrementalGenerator
         builder.Indent().Append("partial ").Append(isValueType ? "struct " : "class ").Append(className).NewLine();
         builder.BeginScope();
 
+        var first = true;
         foreach (var property in properties)
         {
+            if (first)
+            {
+                first = false;
+            }
+            else
+            {
+                builder.NewLine();
+            }
+
             builder.Indent();
             builder.Append(property.MethodAccessibility.ToText());
             builder.Append(" static partial ");
@@ -151,19 +159,15 @@ public sealed class BuildPropertyGenerator : IIncrementalGenerator
             builder.Append(' ');
             builder.Append(property.PropertyName);
             builder.Append(" => ");
-            if (values.TryGetValue(property.PropertyName, out var value))
+            if (values.TryGetValue(property.PropertyKey, out var value))
             {
-                var formatter = property.PropertyType.EndsWith("?", StringComparison.InvariantCulture)
-                    ? Formatters[property.PropertyType.Substring(0, property.PropertyType.Length - 1)]
-                    : Formatters[property.PropertyType];
+                var formatter = GetFormatter(property.PropertyType);
                 builder.Append(formatter(value)).Append(';');
             }
             else
             {
                 builder.Append("default!;");
             }
-            builder.NewLine();
-
             builder.NewLine();
         }
 
@@ -180,6 +184,13 @@ public sealed class BuildPropertyGenerator : IIncrementalGenerator
         { "int", FormatRaw },
         { "bool", FormatRaw }
     };
+
+    private static bool IsFormatSupported(string type) =>
+        Formatters.ContainsKey(type) ||
+        (type.EndsWith("?", StringComparison.InvariantCulture) && Formatters.ContainsKey(type.Substring(0, type.Length - 1)));
+
+    private static Func<string, string> GetFormatter(string type) =>
+        type.EndsWith("?", StringComparison.InvariantCulture) ? Formatters[type.Substring(0, type.Length - 1)] : Formatters[type];
 
     private static string FormatRaw(string value) => value;
 
