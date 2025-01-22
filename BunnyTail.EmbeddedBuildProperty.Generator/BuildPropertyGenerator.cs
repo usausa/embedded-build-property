@@ -79,7 +79,7 @@ public sealed class BuildPropertyGenerator : IIncrementalGenerator
         // Validate property definition
         if (!symbol.IsStatic || !symbol.IsPartialDefinition || (symbol.GetMethod is null))
         {
-            return Results.Error<PropertyModel>(new DiagnosticInfo(Diagnostics.InvalidPropertyDefinition, syntax.GetLocation()));
+            return Results.Error<PropertyModel>(new DiagnosticInfo(Diagnostics.InvalidPropertyDefinition, syntax.GetLocation(), symbol.Name));
         }
 
         // Validate property type
