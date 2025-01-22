@@ -76,11 +76,13 @@ public sealed class BuildPropertyGenerator : IIncrementalGenerator
             return Results.Error<PropertyModel>(null);
         }
 
-        if (!symbol.IsPartialDefinition || !symbol.IsStatic || (symbol.GetMethod is null))
+        // Validate property definition
+        if (!symbol.IsStatic || !symbol.IsPartialDefinition || (symbol.GetMethod is null))
         {
             return Results.Error<PropertyModel>(new DiagnosticInfo(Diagnostics.InvalidPropertyDefinition, syntax.GetLocation()));
         }
 
+        // Validate property type
         var returnType = symbol.GetMethod.ReturnType.ToDisplayString();
         if (!IsFormatSupported(returnType))
         {
