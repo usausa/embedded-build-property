@@ -153,7 +153,12 @@ public sealed class BuildPropertyGenerator : IIncrementalGenerator
         }
 
         // class
-        builder.Indent().Append("partial ").Append(isValueType ? "struct " : "class ").Append(className).NewLine();
+        builder
+            .Indent()
+            .Append("partial ")
+            .Append(isValueType ? "struct " : "class ")
+            .Append(className).
+            NewLine();
         builder.BeginScope();
 
         var first = true;
@@ -168,17 +173,20 @@ public sealed class BuildPropertyGenerator : IIncrementalGenerator
                 builder.NewLine();
             }
 
-            builder.Indent();
-            builder.Append(property.MethodAccessibility.ToText());
-            builder.Append(" static partial ");
-            builder.Append(property.PropertyType);
-            builder.Append(' ');
-            builder.Append(property.PropertyName);
-            builder.Append(" => ");
+            builder
+                .Indent()
+                .Append(property.MethodAccessibility.ToText())
+                .Append(" static partial ")
+                .Append(property.PropertyType)
+                .Append(' ')
+                .Append(property.PropertyName)
+                .Append(" => ");
             if (values.TryGetValue(property.PropertyKey, out var value))
             {
                 var formatter = GetFormatter(property.PropertyType);
-                builder.Append(formatter(value)).Append(';');
+                builder
+                    .Append(formatter(value))
+                    .Append(';');
             }
             else
             {
