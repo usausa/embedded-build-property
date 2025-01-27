@@ -100,7 +100,7 @@ public sealed class BuildPropertyGenerator : IIncrementalGenerator
 
         return Results.Success(new PropertyModel(
             ns,
-            containingType.Name,
+            containingType.GetClassName(),
             containingType.IsValueType,
             symbol.DeclaredAccessibility,
             returnType,
