@@ -69,12 +69,8 @@ public sealed class BuildPropertyGenerator : IIncrementalGenerator
 
     private static Result<PropertyModel> GetPropertyModel(GeneratorAttributeSyntaxContext context)
     {
-        var syntax = (PropertyDeclarationSyntax)context.TargetNode;
-
-        if (context.SemanticModel.GetDeclaredSymbol(syntax) is not IPropertySymbol symbol)
-        {
-            return Results.Error<PropertyModel>(null);
-        }
+        var syntax = context.TargetNode;
+        var symbol = (IPropertySymbol)context.TargetSymbol;
 
         // Validate property definition
         if (!symbol.IsStatic || !symbol.IsPartialDefinition || (symbol.GetMethod is null))
