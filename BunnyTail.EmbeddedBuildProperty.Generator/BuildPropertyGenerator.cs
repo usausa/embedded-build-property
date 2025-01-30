@@ -4,13 +4,14 @@ using System;
 using System.Collections.Immutable;
 using System.Text;
 
-using BunnyTail.EmbeddedBuildProperty.Generator.Helpers;
 using BunnyTail.EmbeddedBuildProperty.Generator.Models;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
+
+using SourceGenerateHelper;
 
 [Generator]
 public sealed class BuildPropertyGenerator : IIncrementalGenerator
@@ -110,7 +111,7 @@ public sealed class BuildPropertyGenerator : IIncrementalGenerator
 
     private static void Execute(SourceProductionContext context, EquatableArray<BuildProperty> values, ImmutableArray<Result<PropertyModel>> properties)
     {
-        foreach (var info in properties.SelectPart(static x => x.Error))
+        foreach (var info in properties.SelectError())
         {
             context.ReportDiagnostic(info);
         }
@@ -118,7 +119,7 @@ public sealed class BuildPropertyGenerator : IIncrementalGenerator
         var valueMap = values.ToArray().ToDictionary(static x => x.Key, static x => x.Value);
 
         var builder = new SourceBuilder();
-        foreach (var group in properties.SelectPart(static x => x.Value).GroupBy(static x => new { x.Namespace, x.ClassName }))
+        foreach (var group in properties.SelectValue().GroupBy(static x => new { x.Namespace, x.ClassName }))
         {
             context.CancellationToken.ThrowIfCancellationRequested();
 
