@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net9.0;net8.0</TargetFrameworks>
@@ -25,10 +25,6 @@
     <Description>Embedded build property source generator.</Description>
     <PackageTags>generator</PackageTags>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="SourceGenerateHelper" Version="1.1.0" GeneratePathProperty="true" PrivateAssets="all" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\BunnyTail.EmbeddedBuildProperty.Generator\BunnyTail.EmbeddedBuildProperty.Generator.csproj" PrivateAssets="all" />
