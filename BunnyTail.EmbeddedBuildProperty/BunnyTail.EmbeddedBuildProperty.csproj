@@ -14,7 +14,7 @@
   <Target Name="PackBuildOutputs" DependsOnTargets="SatelliteDllsProjectOutputGroup;DebugSymbolsProjectOutputGroup">
     <ItemGroup>
       <TfmSpecificPackageFile Include="..\BunnyTail.EmbeddedBuildProperty.props" PackagePath="build" />
-      <TfmSpecificPackageFile Include="$(OutputPath)\BunnyTail.EmbeddedBuildProperty.Generator.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+      <TfmSpecificPackageFile Include="..\BunnyTail.EmbeddedBuildProperty.Generator\bin\$(Configuration)\netstandard2.0\BunnyTail.EmbeddedBuildProperty.Generator.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
       <TfmSpecificPackageFile Include="$(PKGSourceGenerateHelper)\lib\netstandard2.0\SourceGenerateHelper.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
     </ItemGroup>
   </Target>
@@ -28,10 +28,6 @@
 
   <ItemGroup>
     <PackageReference Include="SourceGenerateHelper" Version="1.2.1" GeneratePathProperty="true" PrivateAssets="all" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\BunnyTail.EmbeddedBuildProperty.Generator\BunnyTail.EmbeddedBuildProperty.Generator.csproj" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>

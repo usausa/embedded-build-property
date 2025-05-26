@@ -12,7 +12,9 @@
     <File Path="README.md" />
     <File Path="test.runsettings" />
   </Folder>
-  <Project Path="BunnyTail.EmbeddedBuildProperty/BunnyTail.EmbeddedBuildProperty.csproj" />
+  <Project Path="BunnyTail.EmbeddedBuildProperty/BunnyTail.EmbeddedBuildProperty.csproj">
+    <BuildDependency Project="BunnyTail.EmbeddedBuildProperty.Generator/BunnyTail.EmbeddedBuildProperty.Generator.csproj" />
+  </Project>
   <Project Path="BunnyTail.EmbeddedBuildProperty.Generator/BunnyTail.EmbeddedBuildProperty.Generator.csproj" />
   <Project Path="Develop/Develop.csproj" />
 </Solution>
