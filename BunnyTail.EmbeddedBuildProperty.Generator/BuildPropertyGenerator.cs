@@ -43,10 +43,11 @@ public sealed class BuildPropertyGenerator : IIncrementalGenerator
     // Parser
     // ------------------------------------------------------------
 
-    private static EquatableArray<BuildProperty> SelectBuildProperty(AnalyzerConfigOptionsProvider provider, CancellationToken token)
+    private static EquatableArray<BuildPropertyValue> SelectBuildProperty(AnalyzerConfigOptionsProvider provider, CancellationToken token)
     {
-        var list = new List<BuildProperty>();
+        var list = new List<BuildPropertyValue>();
 
+        // TODO 評価遅延
         if (provider.GlobalOptions.TryGetValue("build_property.EmbeddedBuildProperty", out var values))
         {
             // ReSharper disable once LoopCanBeConvertedToQuery
@@ -57,18 +58,18 @@ public sealed class BuildPropertyGenerator : IIncrementalGenerator
                 {
                     var key = entry.Substring(0, index).Trim();
                     var value = entry.Substring(index + 1).Trim();
-                    list.Add(new BuildProperty(key, value));
+                    list.Add(new BuildPropertyValue(key, value));
                 }
             }
         }
 
-        return new EquatableArray<BuildProperty>(list.ToArray());
+        return new EquatableArray<BuildPropertyValue>(list.ToArray());
     }
 
     private static bool IsTargetSyntax(SyntaxNode syntax) =>
         syntax is PropertyDeclarationSyntax;
 
-    private static Result<PropertyModel> GetPropertyModel(GeneratorAttributeSyntaxContext context)
+    private static Result<BuildPropertyModel> GetPropertyModel(GeneratorAttributeSyntaxContext context)
     {
         var syntax = context.TargetNode;
         var symbol = (IPropertySymbol)context.TargetSymbol;
@@ -76,14 +77,14 @@ public sealed class BuildPropertyGenerator : IIncrementalGenerator
         // Validate property definition
         if (!symbol.IsStatic || !symbol.IsPartialDefinition || (symbol.GetMethod is null))
         {
-            return Results.Error<PropertyModel>(new DiagnosticInfo(Diagnostics.InvalidPropertyDefinition, syntax.GetLocation(), symbol.Name));
+            return Results.Error<BuildPropertyModel>(new DiagnosticInfo(Diagnostics.InvalidPropertyDefinition, syntax.GetLocation(), symbol.Name));
         }
 
         // Validate property type
         var returnType = symbol.GetMethod.ReturnType.ToDisplayString();
         if (!IsFormatSupported(returnType))
         {
-            return Results.Error<PropertyModel>(new DiagnosticInfo(Diagnostics.UnsupportedPropertyType, syntax.GetLocation(), returnType));
+            return Results.Error<BuildPropertyModel>(new DiagnosticInfo(Diagnostics.UnsupportedPropertyType, syntax.GetLocation(), returnType));
         }
 
         var containingType = symbol.ContainingType;
@@ -95,7 +96,7 @@ public sealed class BuildPropertyGenerator : IIncrementalGenerator
             ? value
             : symbol.Name;
 
-        return Results.Success(new PropertyModel(
+        return Results.Success(new BuildPropertyModel(
             ns,
             containingType.GetClassName(),
             containingType.IsValueType,
@@ -109,7 +110,7 @@ public sealed class BuildPropertyGenerator : IIncrementalGenerator
     // Generator
     // ------------------------------------------------------------
 
-    private static void Execute(SourceProductionContext context, EquatableArray<BuildProperty> values, ImmutableArray<Result<PropertyModel>> properties)
+    private static void Execute(SourceProductionContext context, EquatableArray<BuildPropertyValue> values, ImmutableArray<Result<BuildPropertyModel>> properties)
     {
         foreach (var info in properties.SelectError())
         {
@@ -132,7 +133,7 @@ public sealed class BuildPropertyGenerator : IIncrementalGenerator
         }
     }
 
-    private static void BuildSource(SourceBuilder builder, Dictionary<string, string> values, List<PropertyModel> properties)
+    private static void BuildSource(SourceBuilder builder, Dictionary<string, string> values, List<BuildPropertyModel> properties)
     {
         var ns = properties[0].Namespace;
         var className = properties[0].ClassName;

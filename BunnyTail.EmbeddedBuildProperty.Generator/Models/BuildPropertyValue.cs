@@ -1,5 +1,5 @@
 namespace BunnyTail.EmbeddedBuildProperty.Generator.Models;
 
-internal sealed record BuildProperty(
+internal sealed record BuildPropertyValue(
     string Key,
     string Value);

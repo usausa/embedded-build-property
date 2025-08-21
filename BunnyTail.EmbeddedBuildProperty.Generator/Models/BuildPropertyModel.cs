@@ -2,7 +2,7 @@ namespace BunnyTail.EmbeddedBuildProperty.Generator.Models;
 
 using Microsoft.CodeAnalysis;
 
-internal sealed record PropertyModel(
+internal sealed record BuildPropertyModel(
     string Namespace,
     string ClassName,
     bool IsValueType,

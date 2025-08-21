@@ -2,6 +2,10 @@
 
   <ItemGroup>
     <CompilerVisibleProperty Include="EmbeddedBuildProperty" />
+
+    <CompilerVisibleProperty Include="EmbeddedConstantClass" />
+    <CompilerVisibleProperty Include="EmbeddedConstantValues" />
   </ItemGroup>
+
 
 </Project>

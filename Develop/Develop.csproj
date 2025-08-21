@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -13,8 +13,12 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <EmbeddedValue1>"xyx"</EmbeddedValue1>
+    <EmbeddedValue2>123</EmbeddedValue2>
+
     <!-- Debug -->
     <EmbeddedBuildProperty>Flavor=Free,SecretKey=12345678,Code=123,Flag=true</EmbeddedBuildProperty>
+    <EmbeddedConstantValues>Value=string:$(EmbeddedValue1),Value2=int:$(EmbeddedValue2),Value3=int:$(EmbeddedValue3)</EmbeddedConstantValues>
   </PropertyGroup>
 
   <Import Project="..\BunnyTail.EmbeddedBuildProperty.props" />
