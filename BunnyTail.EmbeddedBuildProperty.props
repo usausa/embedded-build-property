@@ -3,14 +3,14 @@
   <ItemGroup>
     <CompilerVisibleProperty Include="EmbeddedBuildProperty" />
 
-    <CompilerVisibleProperty Include="EmbeddedConstantClass" />
-    <CompilerVisibleProperty Include="_EmbeddedConstantValues" />
+    <CompilerVisibleProperty Include="EmbeddedPropertyClass" />
+    <CompilerVisibleProperty Include="_EmbeddedPropertyValues" />
   </ItemGroup>
 
-  <Target Name="ComputeEmbeddedConstantValues"
+  <Target Name="ComputeEmbeddedPropertyValues"
           BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun">
-    <PropertyGroup Condition="'$(EmbeddedConstantValues)' != ''">
-      <_EmbeddedConstantValues>$([System.Text.RegularExpressions.Regex]::Replace('$(EmbeddedConstantValues)', '\r?\n\s*', ''))</_EmbeddedConstantValues>
+    <PropertyGroup Condition="'$(EmbeddedPropertyValues)' != ''">
+      <_EmbeddedPropertyValues>$([System.Text.RegularExpressions.Regex]::Replace('$(EmbeddedPropertyValues)', '\r?\n\s*', ''))</_EmbeddedPropertyValues>
     </PropertyGroup>
   </Target>
 

@@ -18,11 +18,11 @@
 
     <!-- Debug -->
     <EmbeddedBuildProperty>Flavor=Free,SecretKey=12345678,Code=123,Flag=true</EmbeddedBuildProperty>
-    <EmbeddedConstantValues>
+    <EmbeddedPropertyValues>
       Value1=string:$(EmbeddedValue1),
       Value2=int:$(EmbeddedValue2),
       Value3=int:$(EmbeddedValue3)
-    </EmbeddedConstantValues>
+    </EmbeddedPropertyValues>
   </PropertyGroup>
 
   <Import Project="..\BunnyTail.EmbeddedBuildProperty.props" />

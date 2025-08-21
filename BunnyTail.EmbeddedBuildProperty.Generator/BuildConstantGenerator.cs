@@ -23,12 +23,12 @@ public sealed class BuildConstantGenerator : IIncrementalGenerator
         var model = context.AnalyzerConfigOptionsProvider.Select((provider, _) =>
         {
             provider.GlobalOptions.TryGetValue("build_property.RootNamespace", out var ns);
-            provider.GlobalOptions.TryGetValue("build_property.EmbeddedConstantClass", out var className);
-            provider.GlobalOptions.TryGetValue("build_property._EmbeddedConstantValues", out var values);
+            provider.GlobalOptions.TryGetValue("build_property.EmbeddedPropertyClass", out var className);
+            provider.GlobalOptions.TryGetValue("build_property._EmbeddedPropertyValues", out var values);
 
             return new BuildConstantModel(
                 ns ?? string.Empty,
-                String.IsNullOrEmpty(className) ? "EmbeddedConstants" : className!,
+                String.IsNullOrEmpty(className) ? "EmbeddedProperty" : className!,
                 values ?? string.Empty);
         });
 
@@ -99,7 +99,7 @@ public sealed class BuildConstantGenerator : IIncrementalGenerator
         builder.EndScope();
 
         var source = builder.ToString();
-        context.AddSource("EmbeddedConstants.g.cs", SourceText.From(source, Encoding.UTF8));
+        context.AddSource("EmbeddedProperty.g.cs", SourceText.From(source, Encoding.UTF8));
     }
 
     // ------------------------------------------------------------
