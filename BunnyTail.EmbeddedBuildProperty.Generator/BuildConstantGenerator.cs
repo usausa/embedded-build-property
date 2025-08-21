@@ -28,7 +28,7 @@ public sealed class BuildConstantGenerator : IIncrementalGenerator
 
             return new BuildConstantModel(
                 ns ?? string.Empty,
-                String.IsNullOrEmpty(className) ? "Constants" : className!,
+                String.IsNullOrEmpty(className) ? "EmbeddedConstants" : className!,
                 values ?? string.Empty);
         });
 
@@ -99,7 +99,7 @@ public sealed class BuildConstantGenerator : IIncrementalGenerator
         builder.EndScope();
 
         var source = builder.ToString();
-        context.AddSource("Constants.g.cs", SourceText.From(source, Encoding.UTF8));
+        context.AddSource("EmbeddedConstants.g.cs", SourceText.From(source, Encoding.UTF8));
     }
 
     // ------------------------------------------------------------
