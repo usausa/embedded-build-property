@@ -24,7 +24,7 @@ public sealed class BuildConstantGenerator : IIncrementalGenerator
         {
             provider.GlobalOptions.TryGetValue("build_property.RootNamespace", out var ns);
             provider.GlobalOptions.TryGetValue("build_property.EmbeddedConstantClass", out var className);
-            provider.GlobalOptions.TryGetValue("build_property.EmbeddedConstantValues", out var values);
+            provider.GlobalOptions.TryGetValue("build_property._EmbeddedConstantValues", out var values);
 
             return new BuildConstantModel(
                 ns ?? string.Empty,

@@ -4,8 +4,14 @@
     <CompilerVisibleProperty Include="EmbeddedBuildProperty" />
 
     <CompilerVisibleProperty Include="EmbeddedConstantClass" />
-    <CompilerVisibleProperty Include="EmbeddedConstantValues" />
+    <CompilerVisibleProperty Include="_EmbeddedConstantValues" />
   </ItemGroup>
 
+  <Target Name="ComputeEmbeddedConstantValues"
+          BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun">
+    <PropertyGroup Condition="'$(EmbeddedConstantValues)' != ''">
+      <_EmbeddedConstantValues>$([System.Text.RegularExpressions.Regex]::Replace('$(EmbeddedConstantValues)', '\r?\n\s*', ''))</_EmbeddedConstantValues>
+    </PropertyGroup>
+  </Target>
 
 </Project>
