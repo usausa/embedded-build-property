@@ -47,7 +47,7 @@ public sealed class BuildPropertyGenerator : IIncrementalGenerator
     {
         var list = new List<BuildPropertyValue>();
 
-        // TODO 評価遅延
+        // TODO Lazy expression
         if (provider.GlobalOptions.TryGetValue("build_property.EmbeddedBuildProperty", out var values))
         {
             // ReSharper disable once LoopCanBeConvertedToQuery

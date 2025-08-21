@@ -72,7 +72,7 @@ public sealed class BuildConstantGenerator : IIncrementalGenerator
         var span = model.Values.AsSpan().Trim();
 
         var first = true;
-        while (TryReadValueEntry(ref span, out var entry))
+        while (TryReadValueEntry(context, ref span, out var entry))
         {
             if (first)
             {
@@ -83,7 +83,7 @@ public sealed class BuildConstantGenerator : IIncrementalGenerator
                 builder.NewLine();
             }
 
-            var value = entry.Type == "string" ? $"\"{entry.Value}\"" : (String.IsNullOrEmpty(entry.Value) ? "default!" : entry.Value);
+            var value = entry.Type == "string" ? $"@\"{entry.Value.Replace("\"", "\"\"")}\"" : (String.IsNullOrEmpty(entry.Value) ? "default!" : entry.Value);
             builder
                 .Indent()
                 .Append("public const ")
@@ -106,7 +106,7 @@ public sealed class BuildConstantGenerator : IIncrementalGenerator
     // Helper
     // ------------------------------------------------------------
 
-    private static bool TryReadValueEntry(ref ReadOnlySpan<char> source, out (string Name, string Type, string Value) entry)
+    private static bool TryReadValueEntry(SourceProductionContext context, ref ReadOnlySpan<char> source, out (string Name, string Type, string Value) entry)
     {
         entry = default;
 
@@ -118,7 +118,7 @@ public sealed class BuildConstantGenerator : IIncrementalGenerator
         var nameEnd = source.IndexOf('=');
         if (nameEnd <= 0)
         {
-            // TODO LogError("'=' が見つかりません。");
+            context.ReportDiagnostic(new DiagnosticInfo(Diagnostics.InvalidConstValueName, null, string.Empty));
             return false;
         }
 
@@ -128,7 +128,7 @@ public sealed class BuildConstantGenerator : IIncrementalGenerator
         var typeEnd = afterName.IndexOf(':');
         if (typeEnd <= 0)
         {
-            // TODO LogError("':' が見つかりません。");
+            context.ReportDiagnostic(new DiagnosticInfo(Diagnostics.InvalidConstValueType, null, string.Empty));
             return false;
         }
 
