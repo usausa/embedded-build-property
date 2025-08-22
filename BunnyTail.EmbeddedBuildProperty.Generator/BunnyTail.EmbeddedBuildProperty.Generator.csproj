@@ -3,9 +3,23 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <IsRoslynComponent>true</IsRoslynComponent>
-    <IsPackable>false</IsPackable>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
     <CodeAnalysisRuleSet>..\Analyzers.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <IncludeSymbols>false</IncludeSymbols>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);PackBuildOutputs</TargetsForTfmSpecificContentInPackage>
+    <NoWarn>$(NoWarn);NU5128</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>BunnyTail.EmbeddedBuildProperty</PackageId>
+    <Title>BunnyTail.EmbeddedBuildProperty</Title>
+    <Description>Embedded build property source generator.</Description>
+    <PackageTags>generator</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,13 +28,11 @@
     <PackageReference Include="SourceGenerateHelper" Version="1.2.1" GeneratePathProperty="true" PrivateAssets="all" />
   </ItemGroup>
 
-  <PropertyGroup>
-    <GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths</GetTargetPathDependsOn>
-  </PropertyGroup>
-
-  <Target Name="GetDependencyTargetPaths">
+  <Target Name="PackBuildOutputs" DependsOnTargets="SatelliteDllsProjectOutputGroup;DebugSymbolsProjectOutputGroup">
     <ItemGroup>
-      <TargetPathWithTargetPlatformMoniker Include="$(PKGSourceGenerateHelper)\lib\netstandard2.0\SourceGenerateHelper.dll" IncludeRuntimeDependency="false" />
+      <TfmSpecificPackageFile Include="..\BunnyTail.EmbeddedBuildProperty.props" PackagePath="build" />
+      <TfmSpecificPackageFile Include="$(TargetDir)\BunnyTail.EmbeddedBuildProperty.Generator.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+      <TfmSpecificPackageFile Include="$(PKGSourceGenerateHelper)\lib\netstandard2.0\SourceGenerateHelper.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
     </ItemGroup>
   </Target>
 

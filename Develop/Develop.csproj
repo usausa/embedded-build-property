@@ -29,7 +29,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BunnyTail.EmbeddedBuildProperty.Generator\BunnyTail.EmbeddedBuildProperty.Generator.csproj" OutputItemType="analyzer" ReferenceOutputAssembly="false" />
-    <ProjectReference Include="..\BunnyTail.EmbeddedBuildProperty\BunnyTail.EmbeddedBuildProperty.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SourceGenerateHelper" Version="1.2.1" GeneratePathProperty="true" PrivateAssets="all" />
+    <Analyzer Include="$(PKGSourceGenerateHelper)\lib\netstandard2.0\SourceGenerateHelper.dll" />
   </ItemGroup>
 
 </Project>

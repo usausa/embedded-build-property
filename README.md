@@ -4,34 +4,37 @@
 
 ## What is this?
 
-Generate property to get build options.
+Generate consts class to get build options.
 
 ## Usage
+
+### Project
+
+```xml
+  <PropertyGroup>
+    <EmbeddedFlavor>Development</EmbeddedFlavor>
+    <EmbeddedSecretKey></EmbeddedFlavor>
+  </PropertyGroup>
+
+  <Import Project="..\.UserEmbeddedProperty.props" Condition="Exists('..\.UserEmbeddedProperty.props')" />
+
+  <PropertyGroup>
+    <EmbeddedPropertyValues>
+      Flavor=string:$(EmbeddedFlavor),
+      SecretKey=string:$(EmbeddedSecretKey)
+    </EmbeddedPropertyValues>
+  </PropertyGroup>
+```
 
 ### Source
 
 ```cs
-using BunnyTail.EmbeddedBuildProperty;
-
-internal static partial class Variants
-{
-    [BuildProperty]
-    public static partial string Flavor { get; }
-
-    [BuildProperty("SecretKey")]
-    public static partial string? Key { get; }
-}
+Console.WriteLine($"Flavor: {EmbeddedProperty.Flavor}");
+Console.WriteLine($"SecretKey: {EmbeddedProperty.SecretKey}");
 ```
 
 ### Build
 
 ```
-dotnet build Example.csproj /p:EmbeddedBuildProperty=\"Flavor=Free,SecretKey=12345678\"
-```
-
-### Result
-
-```cs
-Console.WriteLine($"Flavor: {Variants.Flavor}");    // Free
-Console.WriteLine($"Key: {Variants.Key}");          // 12345678
+dotnet build Example.csproj /p:Flavor=Production /p:SecretKey=xxxx
 ```

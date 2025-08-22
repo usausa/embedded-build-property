@@ -1,14 +1,12 @@
 namespace BunnyTail.EmbeddedBuildProperty.Generator;
 
 using System;
-using System.Collections.Immutable;
 using System.Text;
 
+using BunnyTail.EmbeddedBuildProperty.Generator.Helpers;
 using BunnyTail.EmbeddedBuildProperty.Generator.Models;
 
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
 
 using SourceGenerateHelper;
@@ -16,151 +14,65 @@ using SourceGenerateHelper;
 [Generator]
 public sealed class BuildPropertyGenerator : IIncrementalGenerator
 {
-    private const string AttributeName = "BunnyTail.EmbeddedBuildProperty.BuildPropertyAttribute";
-
     // ------------------------------------------------------------
     // Initialize
     // ------------------------------------------------------------
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        var valueProvider = context.AnalyzerConfigOptionsProvider
-            .Select(SelectBuildProperty);
+        var model = context.AnalyzerConfigOptionsProvider.Select((provider, _) =>
+        {
+            provider.GlobalOptions.TryGetValue("build_property.RootNamespace", out var ns);
+            provider.GlobalOptions.TryGetValue("build_property.EmbeddedPropertyClass", out var className);
+            provider.GlobalOptions.TryGetValue("build_property._EmbeddedPropertyValues", out var values);
 
-        var propertyProvider = context.SyntaxProvider
-            .ForAttributeWithMetadataName(
-                AttributeName,
-                static (syntax, _) => IsTargetSyntax(syntax),
-                static (context, _) => GetPropertyModel(context))
-            .Collect();
+            return new BuildPropertyModel(
+                ns ?? string.Empty,
+                String.IsNullOrEmpty(className) ? "EmbeddedProperty" : className!,
+                values ?? string.Empty);
+        });
 
         context.RegisterImplementationSourceOutput(
-            valueProvider.Combine(propertyProvider),
-            static (context, provider) => Execute(context, provider.Left, provider.Right));
-    }
-
-    // ------------------------------------------------------------
-    // Parser
-    // ------------------------------------------------------------
-
-    private static EquatableArray<BuildPropertyValue> SelectBuildProperty(AnalyzerConfigOptionsProvider provider, CancellationToken token)
-    {
-        var list = new List<BuildPropertyValue>();
-
-        // TODO Lazy expression
-        if (provider.GlobalOptions.TryGetValue("build_property.EmbeddedBuildProperty", out var values))
-        {
-            // ReSharper disable once LoopCanBeConvertedToQuery
-            foreach (var entry in values.Split(','))
-            {
-                var index = entry.IndexOf('=');
-                if (index > 0)
-                {
-                    var key = entry.Substring(0, index).Trim();
-                    var value = entry.Substring(index + 1).Trim();
-                    list.Add(new BuildPropertyValue(key, value));
-                }
-            }
-        }
-
-        return new EquatableArray<BuildPropertyValue>(list.ToArray());
-    }
-
-    private static bool IsTargetSyntax(SyntaxNode syntax) =>
-        syntax is PropertyDeclarationSyntax;
-
-    private static Result<BuildPropertyModel> GetPropertyModel(GeneratorAttributeSyntaxContext context)
-    {
-        var syntax = context.TargetNode;
-        var symbol = (IPropertySymbol)context.TargetSymbol;
-
-        // Validate property definition
-        if (!symbol.IsStatic || !symbol.IsPartialDefinition || (symbol.GetMethod is null))
-        {
-            return Results.Error<BuildPropertyModel>(new DiagnosticInfo(Diagnostics.InvalidPropertyDefinition, syntax.GetLocation(), symbol.Name));
-        }
-
-        // Validate property type
-        var returnType = symbol.GetMethod.ReturnType.ToDisplayString();
-        if (!IsFormatSupported(returnType))
-        {
-            return Results.Error<BuildPropertyModel>(new DiagnosticInfo(Diagnostics.UnsupportedPropertyType, syntax.GetLocation(), returnType));
-        }
-
-        var containingType = symbol.ContainingType;
-        var ns = String.IsNullOrEmpty(containingType.ContainingNamespace.Name)
-            ? string.Empty
-            : containingType.ContainingNamespace.ToDisplayString();
-        var attribute = symbol.GetAttributes().First(static x => x.AttributeClass!.ToDisplayString() == AttributeName);
-        var propertyName = (attribute.ConstructorArguments.Length > 0) && (attribute.ConstructorArguments[0].Value is string value)
-            ? value
-            : symbol.Name;
-
-        return Results.Success(new BuildPropertyModel(
-            ns,
-            containingType.GetClassName(),
-            containingType.IsValueType,
-            symbol.DeclaredAccessibility,
-            returnType,
-            symbol.Name,
-            propertyName));
+            model,
+            Execute);
     }
 
     // ------------------------------------------------------------
     // Generator
     // ------------------------------------------------------------
 
-    private static void Execute(SourceProductionContext context, EquatableArray<BuildPropertyValue> values, ImmutableArray<Result<BuildPropertyModel>> properties)
+    private static void Execute(SourceProductionContext context, BuildPropertyModel model)
     {
-        foreach (var info in properties.SelectError())
+        if (String.IsNullOrEmpty(model.Values))
         {
-            context.ReportDiagnostic(info);
+            return;
         }
-
-        var valueMap = values.ToArray().ToDictionary(static x => x.Key, static x => x.Value);
 
         var builder = new SourceBuilder();
-        foreach (var group in properties.SelectValue().GroupBy(static x => new { x.Namespace, x.ClassName }))
-        {
-            context.CancellationToken.ThrowIfCancellationRequested();
-
-            builder.Clear();
-            BuildSource(builder, valueMap, group.ToList());
-
-            var filename = MakeFilename(group.Key.Namespace, group.Key.ClassName);
-            var source = builder.ToString();
-            context.AddSource(filename, SourceText.From(source, Encoding.UTF8));
-        }
-    }
-
-    private static void BuildSource(SourceBuilder builder, Dictionary<string, string> values, List<BuildPropertyModel> properties)
-    {
-        var ns = properties[0].Namespace;
-        var className = properties[0].ClassName;
-        var isValueType = properties[0].IsValueType;
 
         builder.AutoGenerated();
         builder.EnableNullable();
         builder.NewLine();
 
         // namespace
-        if (!String.IsNullOrEmpty(ns))
+        if (!String.IsNullOrEmpty(model.Namespace))
         {
-            builder.Namespace(ns);
+            builder.Namespace(model.Namespace);
             builder.NewLine();
         }
 
         // class
         builder
             .Indent()
-            .Append("partial ")
-            .Append(isValueType ? "struct " : "class ")
-            .Append(className).
+            .Append("internal static partial class ")
+            .Append(model.ClassName).
             NewLine();
         builder.BeginScope();
 
+        var span = model.Values.AsSpan().Trim();
+
         var first = true;
-        foreach (var property in properties)
+        while (TryReadValueEntry(context, ref span, out var entry))
         {
             if (first)
             {
@@ -171,66 +83,94 @@ public sealed class BuildPropertyGenerator : IIncrementalGenerator
                 builder.NewLine();
             }
 
+            var value = entry.Type == "string" ? $"@\"{entry.Value.Replace("\"", "\"\"")}\"" : (String.IsNullOrEmpty(entry.Value) ? "default!" : entry.Value);
             builder
                 .Indent()
-                .Append(property.MethodAccessibility.ToText())
-                .Append(" static partial ")
-                .Append(property.PropertyType)
+                .Append("public const ")
+                .Append(entry.Type)
                 .Append(' ')
-                .Append(property.PropertyName)
-                .Append(" => ");
-            if (values.TryGetValue(property.PropertyKey, out var value))
-            {
-                var formatter = GetFormatter(property.PropertyType);
-                builder
-                    .Append(formatter(value))
-                    .Append(';');
-            }
-            else
-            {
-                builder.Append("default!;");
-            }
-            builder.NewLine();
+                .Append(entry.Name)
+                .Append(" = ")
+                .Append(value)
+                .Append(';')
+                .NewLine();
         }
 
         builder.EndScope();
+
+        var source = builder.ToString();
+        context.AddSource("EmbeddedProperty.g.cs", SourceText.From(source, Encoding.UTF8));
     }
 
     // ------------------------------------------------------------
     // Helper
     // ------------------------------------------------------------
 
-    private static readonly Dictionary<string, Func<string, string>> Formatters = new()
+    private static bool TryReadValueEntry(SourceProductionContext context, ref ReadOnlySpan<char> source, out (string Name, string Type, string Value) entry)
     {
-        { "string", FormatString },
-        { "int", FormatRaw },
-        { "bool", FormatRaw }
-    };
+        entry = default;
 
-    private static bool IsFormatSupported(string type) =>
-        Formatters.ContainsKey(type) ||
-        (type.EndsWith("?", StringComparison.InvariantCulture) && Formatters.ContainsKey(type.Substring(0, type.Length - 1)));
-
-    private static Func<string, string> GetFormatter(string type) =>
-        type.EndsWith("?", StringComparison.InvariantCulture) ? Formatters[type.Substring(0, type.Length - 1)] : Formatters[type];
-
-    private static string FormatRaw(string value) => value;
-
-    private static string FormatString(string value) => $"@\"{value.Replace("\"", "\"\"")}\"";
-
-    private static string MakeFilename(string ns, string className)
-    {
-        var buffer = new StringBuilder();
-
-        if (!String.IsNullOrEmpty(ns))
+        if (source.IsEmpty)
         {
-            buffer.Append(ns.Replace('.', '_'));
-            buffer.Append('_');
+            return false;
         }
 
-        buffer.Append(className.Replace('<', '[').Replace('>', ']'));
-        buffer.Append(".g.cs");
+        var nameEnd = source.IndexOf('=');
+        if (nameEnd <= 0)
+        {
+            context.ReportDiagnostic(new DiagnosticInfo(Diagnostics.InvalidConstValueName, null, string.Empty));
+            return false;
+        }
 
-        return buffer.ToString();
+        var nameSpan = source.Slice(0, nameEnd);
+        var afterName = source.Slice(nameEnd + 1);
+
+        var typeEnd = afterName.IndexOf(':');
+        if (typeEnd <= 0)
+        {
+            context.ReportDiagnostic(new DiagnosticInfo(Diagnostics.InvalidConstValueType, null, string.Empty));
+            return false;
+        }
+
+        var typeSpan = afterName.Slice(0, typeEnd);
+        var valueSpan = afterName.Slice(typeEnd + 1);
+
+        var sb = new ValueStringBuilder(stackalloc char[256]);
+        var i = 0;
+        var escape = false;
+
+        while (i < valueSpan.Length)
+        {
+            var c = valueSpan[i];
+
+            if (escape)
+            {
+                sb.Append(c);
+                escape = false;
+                i++;
+                continue;
+            }
+
+            if (c == '\\')
+            {
+                escape = true;
+                i++;
+                continue;
+            }
+
+            i++;
+
+            if (c == ',')
+            {
+                break;
+            }
+
+            sb.Append(c);
+        }
+
+        source = source.Slice(nameEnd + 1 + typeEnd + 1 + i).TrimStart();
+
+        entry = (nameSpan.Trim().ToString(), typeSpan.Trim().ToString(), sb.ToTrimString());
+        return true;
     }
 }
