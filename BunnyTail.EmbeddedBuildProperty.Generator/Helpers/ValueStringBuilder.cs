@@ -1,5 +1,7 @@
 namespace BunnyTail.EmbeddedBuildProperty.Generator.Helpers;
 
+using System.Buffers;
+
 internal ref struct ValueStringBuilder
 {
     private char[]? arrayFromPool;
@@ -11,6 +13,14 @@ internal ref struct ValueStringBuilder
         arrayFromPool = null;
         span = initialBuffer;
         pos = 0;
+    }
+
+    public void Dispose()
+    {
+        if (arrayFromPool != null)
+        {
+            ArrayPool<char>.Shared.Return(arrayFromPool);
+        }
     }
 
     public void Append(char c)
@@ -25,10 +35,16 @@ internal ref struct ValueStringBuilder
     private void Grow(int additional)
     {
         var newSize = Math.Max(span.Length * 2, pos + additional);
-        var newArray = new char[newSize];
+        var newArray = ArrayPool<char>.Shared.Rent(newSize);
         span.CopyTo(newArray);
+
+        if (arrayFromPool != null)
+        {
+            ArrayPool<char>.Shared.Return(arrayFromPool);
+        }
+
         arrayFromPool = newArray;
-        span = arrayFromPool;
+        span = arrayFromPool.AsSpan(0, newSize);
     }
 
     public string ToTrimString()

@@ -74,6 +74,11 @@ public sealed class BuildPropertyGenerator : IIncrementalGenerator
         var first = true;
         while (TryReadValueEntry(context, ref span, out var entry))
         {
+            if (String.IsNullOrWhiteSpace(entry.Name) || String.IsNullOrWhiteSpace(entry.Type))
+            {
+                continue;
+            }
+
             if (first)
             {
                 first = false;
@@ -135,7 +140,7 @@ public sealed class BuildPropertyGenerator : IIncrementalGenerator
         var typeSpan = afterName.Slice(0, typeEnd);
         var valueSpan = afterName.Slice(typeEnd + 1);
 
-        var sb = new ValueStringBuilder(stackalloc char[256]);
+        using var sb = new ValueStringBuilder(stackalloc char[256]);
         var i = 0;
         var escape = false;
 
