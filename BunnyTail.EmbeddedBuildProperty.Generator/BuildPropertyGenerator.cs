@@ -3,7 +3,6 @@ namespace BunnyTail.EmbeddedBuildProperty.Generator;
 using System;
 using System.Text;
 
-using BunnyTail.EmbeddedBuildProperty.Generator.Helpers;
 using BunnyTail.EmbeddedBuildProperty.Generator.Models;
 
 using Microsoft.CodeAnalysis;
