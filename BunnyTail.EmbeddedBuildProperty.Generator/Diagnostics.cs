@@ -6,7 +6,7 @@ internal static class Diagnostics
 {
     // Property
 
-    public static DiagnosticDescriptor InvalidPropertyDefinition => new(
+    public static DiagnosticDescriptor InvalidPropertyDefinition { get; } = new(
         id: "BTBP0001",
         title: "Invalid property definition",
         messageFormat: "Property must be static partial and has getter. property=[{0}]",
@@ -14,7 +14,7 @@ internal static class Diagnostics
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true);
 
-    public static DiagnosticDescriptor UnsupportedPropertyType => new(
+    public static DiagnosticDescriptor UnsupportedPropertyType { get; } = new(
         id: "BTBP0002",
         title: "Unsupported property type",
         messageFormat: "Unsupported property type. type=[{0}]",
@@ -24,7 +24,7 @@ internal static class Diagnostics
 
     // Constant
 
-    public static DiagnosticDescriptor InvalidConstValueName => new(
+    public static DiagnosticDescriptor InvalidConstValueName { get; } = new(
         id: "BTBP1001",
         title: "Invalid const value name",
         messageFormat: "Name separator '=' is not found.",
@@ -32,7 +32,7 @@ internal static class Diagnostics
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true);
 
-    public static DiagnosticDescriptor InvalidConstValueType => new(
+    public static DiagnosticDescriptor InvalidConstValueType { get; } = new(
         id: "BTBP1002",
         title: "Invalid const value type",
         messageFormat: "Type separator ':' is not found.",
