@@ -20,7 +20,7 @@
     <Authors>machi_pon</Authors>
     <Copyright>Copyright (c) 2023 machi_pon</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/usausa/embedded-build-property</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/usausa/bunnytail-embedded-build-property</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
