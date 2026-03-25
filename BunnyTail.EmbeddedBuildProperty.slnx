@@ -3,9 +3,11 @@
     <File Path=".editorconfig" />
     <File Path=".gitattributes" />
     <File Path=".gitignore" />
+    <File Path="AGENTS.md" />
     <File Path="Analyzers.ruleset" />
     <File Path="BunnyTail.EmbeddedBuildProperty.props" />
     <File Path="BunnyTail.EmbeddedBuildProperty.sln.DotSettings" />
+    <File Path="CLAUDE.md" />
     <File Path="Directory.Build.props" />
     <File Path="Directory.Build.targets" />
     <File Path="LICENSE" />
