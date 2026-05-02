@@ -140,10 +140,9 @@ public sealed class BuildPropertyGenerator : IIncrementalGenerator
         var valueSpan = afterName.Slice(typeEnd + 1);
 
         using var sb = new ValueStringBuilder(stackalloc char[256]);
-        var i = 0;
         var escape = false;
-
-        while (i < valueSpan.Length)
+        var i = 0;
+        for (; i < valueSpan.Length; i++)
         {
             var c = valueSpan[i];
 
@@ -151,21 +150,18 @@ public sealed class BuildPropertyGenerator : IIncrementalGenerator
             {
                 sb.Append(c);
                 escape = false;
-                i++;
                 continue;
             }
 
             if (c == '\\')
             {
                 escape = true;
-                i++;
                 continue;
             }
 
-            i++;
-
             if (c == ',')
             {
+                i++;
                 break;
             }
 
